@@ -1,0 +1,16 @@
+.DS_Store
+bin-debug
+bin-release
+html-template
+build.properties
+build/
+.actionScriptProperties
+.flexProperties
+.fxpProperties
+.flexLibProperties
+.project
+formatting.properties
+.settings/
+bin/
+.metadata
+

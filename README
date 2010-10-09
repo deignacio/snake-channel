@@ -1,0 +1,88 @@
+snake multiplayer channel
+
+this was initially written by David Ignacio <dignacio@litl.com>
+
+this was developed using the following:
+* flash builder 4 [0]
+or
+* adobe flex sdk 4.0.0 (not the open source one) [1]
+* sun java 1.6 [2]
+* ant[3]
+
+and
+* the flash 10.0 playerglobal.swc [8]
+* the litl as3 sdk core library [4]
+* the litl as3 sdk controls [5]
+* the litl as3 sdk helpers [6]
+
+to test you'll need:
+* adobe air 2 [7]
+* the litl as3 sdk simulator [8]
+
+to play you'll need:
+* a litl remote (availability tba)
+* or the litl remote android app (available any time now)
+* or the litl remote iphone app (pending)
+* or the remote tab of the simulator (available now)
+
+setting up using open source tools
+* install tools needed (adobe flex sdk, java, ant)
+* checkout and build (or just install) the as3 sdk core
+* checkout and build (or just install) the as3 sdk controls
+* checkout and build (or just install) the as3 sdk helpers
+* checkout this source (i use ~/checkout/snake-channel)
+* copy build.properties.template to build.properties
+* modify build.properties to point to sdk paths
+    i have the flex sdk at /opt/flex-sdk_4.0.0
+    i installed the litl as3 sdk core to /opt/litl-sdk/core
+    i installed the litl as3 sdk controls to /opt/litl-sdk/controls
+    i installed the litl as3 sdk helpers to /opt/litl-sdk/helpers
+
+building the swf
+* cd to the source (cd ~/checkout/snake-channel)
+* run ant (ant)
+    the default target is build-debug-swf
+    this builds a debug version of the swf with extra
+    symbols and such
+    for information on other ant targets, run
+        ant -p
+
+testing/running swf
+* install flash debug plugin (/opt/flex-sdk_4.0.0/runtimes/player)
+* install adobe air 2 [7]
+* install the litl simulator [8]
+
+* run the simulator
+* run the swf project in flash builder
+* or open the swf in the simulator
+    usually it's in ~/checkout/snake-channel/build/deploy/main.swf
+* or open the built swf in a browser (i'm using firefox and chromium)
+
+* start up the remote
+* connect to the simulator
+
+packaging for submission
+* cd to the source (cd ~/checkout/snake-sample-channel)
+* run ant target (ant build-release-zip)
+   creates ~/checkout/snake-channel/build/deploy.zip for use in the developer site to
+   upload the new version of your channel
+
+
+build artifact layout:
+* ${basedir}/build/
+  all build artifacts are contained here
+* ${basedir}/build/deploy/main.swf
+  the swf file created to use while testing
+* ${basedir}/build/deploy.zip
+  the zip file to use when uploading your channel to litl
+
+urls:
+[0] http://www.adobe.com/go/try_flashbuilder
+[1] http://opensource.adobe.com/wiki/display/flexsdk/Download+Flex+4
+[2] sun-java6-jre package on ubuntu jaunty and lucid
+[3] ant package on ubuntu jaunty, ant1.8 on lucid
+[4] go to http://developer.litl.com or the as3-sdk-core repo
+[5] go to http://developer.litl.com or the as3-sdk-controls repo
+[6] go to http://developer.litl.com or the as3-sdk-helpers repo
+[7] http://labs.adobe.com/downloads/air2.html
+[8] go to http://developer.litl.com or the as3-sdk-simulator repo
