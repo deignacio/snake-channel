@@ -23,8 +23,10 @@ package com.litl.snake.model {
     import com.litl.helpers.richinput.remotehandler.RemoteHandlerManager;
     import com.litl.sdk.richinput.IRemoteControl;
     import com.litl.sdk.service.LitlService;
+    import com.litl.snake.controls.IGameLoopMember;
     import com.litl.snake.enum.ArenaSize;
     import com.litl.snake.enum.ArenaWrap;
+    import com.litl.snake.enum.GameLoopStage;
 
     /**
      * contains all of the state of the game
@@ -36,7 +38,7 @@ package com.litl.snake.model {
      * @see com.litl.snake.model.ArenaModel
      * @see com.litl.snake.model.Player
      */
-    public class GameModel extends RemoteHandlerManager {
+    public class GameModel extends RemoteHandlerManager implements IGameLoopMember {
         /** an array of players that crashed this turn */
         public var crashes:Array;
 
@@ -50,6 +52,10 @@ package com.litl.snake.model {
             arena = new ArenaModel(ArenaSize.MEDIUM, ArenaWrap.WRAP_YES);
 
             start();
+        }
+
+        public function get stages():Array {
+            return [GameLoopStage.MOVE];
         }
 
         /** clears crashes and resets the arena */
@@ -94,7 +100,17 @@ package com.litl.snake.model {
             forEachHandler(outer);
         }
 
-        protected function oneTurn():void {
+        public function onStage(stage:String):void {
+            switch (stage) {
+                case GameLoopStage.MOVE:
+                    onMove();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        protected function onMove():void {
             if (crashes.length) {
                 return;
             }

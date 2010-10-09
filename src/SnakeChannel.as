@@ -23,6 +23,9 @@ package {
     import com.litl.helpers.view.ViewBase;
     import com.litl.sdk.enum.View;
     import com.litl.sdk.message.InitializeMessage;
+    import com.litl.sdk.message.UserInputMessage;
+    import com.litl.snake.controls.GameLoop;
+    import com.litl.snake.enum.GameSpeed;
     import com.litl.snake.model.GameModel;
 
     public class SnakeChannel extends BaseChannel {
@@ -31,6 +34,7 @@ package {
         public static const CHANNEL_VERSION:String = "1.0";
         public static const CHANNEL_HAS_OPTIONS:Boolean = false;
 
+        protected var gameLoop:GameLoop;
         protected var model:GameModel;
 
         public function SnakeChannel() {
@@ -39,7 +43,10 @@ package {
 
         /** @inheritDoc */
         override protected function setup():void {
+            gameLoop = new GameLoop(GameSpeed.NORMAL);
+
             model = new GameModel(service);
+            gameLoop.addMember(model);
         }
 
         /** @inheritDoc */
@@ -67,6 +74,14 @@ package {
         override protected function handleInitialize(e:InitializeMessage):void {
             service.channelTitle = CHANNEL_TITLE;
             service.channelItemCount = 1;
+        }
+
+        override protected function handleGoReleased(e:UserInputMessage):void {
+            if (gameLoop.running) {
+                gameLoop.pause();
+            } else {
+                gameLoop.resume();
+            }
         }
     }
 }
