@@ -19,14 +19,42 @@
 * IN THE SOFTWARE.
 */
 package com.litl.snake.model {
+    import com.litl.helpers.richinput.remotehandler.IRemoteHandler;
     import com.litl.helpers.richinput.remotehandler.RemoteHandlerManager;
+    import com.litl.sdk.richinput.IRemoteControl;
     import com.litl.sdk.service.LitlService;
+    import com.litl.snake.enum.ArenaSize;
 
     public class GameModel extends RemoteHandlerManager {
+        /** the arena */
+        public var arena:ArenaModel;
+
         public function GameModel(service:LitlService) {
             super(service, new PlayerFactory());
 
+            arena = new ArenaModel(ArenaSize.MEDIUM);
+
             start();
+        }
+
+        /**
+         * builds the player object, and enters the arena
+         *
+         * @inheritDoc
+         */
+        override protected function onRemoteConnected(remote:IRemoteControl, handler:IRemoteHandler):void {
+            var player:Player = handler as Player;
+            arena.enterArena(player);
+        }
+
+        /**
+         * removes the player from the arena
+         *
+         * @inheritDoc
+         */
+        override protected function onRemoteDisconnected(remote:IRemoteControl, handler:IRemoteHandler):void {
+            var player:Player = handler as Player;
+            arena.leaveArena(player);
         }
     }
 }
