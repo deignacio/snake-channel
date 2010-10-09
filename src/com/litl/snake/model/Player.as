@@ -23,6 +23,7 @@ package com.litl.snake.model {
     import com.litl.helpers.richinput.remotehandler.IRemoteHandler;
     import com.litl.helpers.richinput.remotehandler.KeypadRemoteHandler;
     import com.litl.sdk.richinput.Accelerometer;
+    import com.litl.snake.controls.PlayerDirectionKeypad;
     import com.litl.snake.enum.PlayerDirection;
 
     /**
@@ -72,9 +73,33 @@ package com.litl.snake.model {
         }
 
         override protected function createKeypad(accelerometer:Accelerometer):AccelerometerKeypad {
-            var keypad:AccelerometerKeypad = new AccelerometerKeypad(accelerometer);
+            var keypad:AccelerometerKeypad = new PlayerDirectionKeypad(accelerometer);
             keypad.start();
             return keypad;
+        }
+
+        public function checkKeypad():void {
+            switch (direction) {
+                case PlayerDirection.NORTH:
+                case PlayerDirection.SOUTH:
+                    if (keypad.isButtonPressed(PlayerDirection.EAST)) {
+                        direction = PlayerDirection.EAST;
+                    } else if (keypad.isButtonPressed(PlayerDirection.WEST)) {
+                        direction = PlayerDirection.WEST;
+                    }
+                    break;
+                case PlayerDirection.WEST:
+                case PlayerDirection.EAST:
+                    if (keypad.isButtonPressed(PlayerDirection.NORTH)) {
+                        direction = PlayerDirection.NORTH;
+                    } else if (keypad.isButtonPressed(PlayerDirection.SOUTH)) {
+                        direction = PlayerDirection.SOUTH;
+                    }
+                    break;
+                default:
+                    direction = PlayerDirection.NORTH;
+                    break;
+            }
         }
     }
 }

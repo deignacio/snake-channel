@@ -20,6 +20,7 @@
 */
 package com.litl.snake.model {
     import com.litl.snake.enum.ArenaSize;
+    import com.litl.snake.enum.ArenaWrap;
     import com.litl.snake.enum.PlayerDirection;
 
     import flash.utils.Dictionary;
@@ -32,10 +33,12 @@ package com.litl.snake.model {
      */
     public class ArenaModel {
         private var _size:ArenaSize = null;
+        private var wrap:ArenaWrap;
         private var spots:Dictionary;
 
-        public function ArenaModel(size:ArenaSize) {
+        public function ArenaModel(size:ArenaSize, wrap:ArenaWrap) {
             this.size = size;
+            this.wrap = wrap;
         }
 
         /** the arena size of the arena */
@@ -75,6 +78,52 @@ package com.litl.snake.model {
             };
 
             forEachSpot(unclaimSpot);
+        }
+
+        /**
+         * advances the player in their current direction.
+         * takes into account arena wrap rules.
+         *
+         * if no crashes, claims the spot for the player
+         *
+         * @return if there was a crash recorded
+         */
+        public function advancePlayer(player:Player):Boolean {
+            var spot:int = toSpot(player.position);
+            var hitWall:Boolean = false;
+            switch (player.direction) {
+                case PlayerDirection.NORTH:
+                    spot -= size.cols;
+                    if (spot < 0) {
+                        hitWall = true;
+                        spot += size.numSpots + 1;
+                    }
+                    break;
+                case PlayerDirection.SOUTH:
+                    spot += size.cols;
+                    if (spot > size.numSpots) {
+                        hitWall = true;
+                        spot -= size.numSpots + 1;
+                    }
+                    break;
+                case PlayerDirection.WEST:
+                    spot -= 1;
+
+                    hitWall = spot % size.cols == 0 || (spot + 1) % size.cols == 0;
+                    break;
+                case PlayerDirection.EAST:
+                    spot += 1;
+
+                    hitWall = spot % size.cols == 0 || (spot + 1) % size.cols == 0;
+                    break;
+            }
+
+            if ((!wrap.shouldWrap && hitWall) || isOccupied(spot)) {
+                return true;
+            } else {
+                moveToSpot(player, spot);
+                return false;
+            }
         }
 
         /** convert an external player position to the internal spot format */
