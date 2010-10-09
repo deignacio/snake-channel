@@ -1,0 +1,121 @@
+<project basedir="./" default="build-debug-swf" name="SnakeChannel">
+  <property name="build.properties.path" value="${basedir}/build.properties"/>
+  <property file="${build.properties.path}"/>
+
+  <taskdef resource="flexTasks.tasks" classpath="${flex.sdk.home}/ant/lib/flexTasks.jar" />
+
+  <target name="clean">
+    <delete dir="${output.path}"/>
+  </target>
+
+  <target name="build-release-zip" description="Build release deploy zipfile">
+    <antcall target="clean"/>
+    <antcall target="build-release-swf"/>
+    <zip destfile="${flex.output.zip}"
+         basedir="${flex.output.path}"
+         excludes="*.cache" />
+  </target>
+
+  <target name="build-release-swf" description="Build release client swf">
+    <antcall target="build-swf">
+      <param name="debug" value="false"/>
+    </antcall>
+  </target>
+
+  <target name="build-debug-swf" description="Build debug client swf">
+    <antcall target="build-swf">
+      <param name="debug" value="true"/>
+    </antcall>
+  </target>
+
+  <target name="build-swf" description="Build swf">
+    <mxmlc file="${flex.main}"
+           output="${flex.output.swf}"
+           keep-generated-actionscript="false"
+           incremental="true"
+           as3="true"
+           optimize="true"
+           fork="${fork_fb}"
+           maxmemory="512m"
+           debug="${debug}"
+           locale="${locale}"
+           strict="true"
+           static-link-runtime-shared-libraries="true"
+            default-frame-rate="60"
+           >
+
+      <!-- Get default compiler options. -->
+      <load-config filename="${flex.sdk.home}/frameworks/flex-config.xml"/>
+
+      <!-- List of path elements that form the roots of ActionScript class hierarchies. -->
+      <compiler.source-path path-element="${flex.source}"/>
+      <compiler.source-path path-element="${flex.sdk.home}/frameworks"/>
+
+      <compiler.library-path dir="${flex.sdk.home}/frameworks" append="true">
+        <include name="libs"/>
+        <include name="locale/${locale}"/>
+      </compiler.library-path>
+
+      <compiler.library-path dir="${litl.sdk.core.path}" append="true">
+        <include name="bin"/>
+      </compiler.library-path>
+
+      <compiler.library-path dir="${litl.sdk.controls.path}" append="true">
+        <include name="bin"/>
+      </compiler.library-path>
+
+      <compiler.library-path dir="${litl.sdk.helpers.path}" append="true">
+        <include name="bin"/>
+      </compiler.library-path>
+
+      <!--
+      <compiler.library-path dir="${flex.lib}" append="true">
+        <include name="*.swc"/>
+      </compiler.library-path>
+      -->
+    </mxmlc>
+  </target>
+
+  <target name="build-for-sdk" description="Create artifacts for sdk distribution"
+          depends="build-release-zip">
+    <property name="sdk.output.path" value="${output.path}/sdk"/>
+    <mkdir dir="${sdk.output.path}"/>
+    <copy preservelastmodified="true"
+          todir="${sdk.output.path}/lib"
+          verbose="true">
+      <fileset dir="${litl.sdk.core.path}/bin"/>
+    </copy>
+    <copy preservelastmodified="true"
+          todir="${sdk.output.path}/lib"
+          verbose="true">
+      <fileset dir="${litl.sdk.controls.path}/bin"/>
+    </copy>
+    <copy preservelastmodified="true"
+          todir="${sdk.output.path}/lib"
+          verbose="true">
+      <fileset dir="${litl.sdk.helpers.path}/bin"/>
+    </copy>
+    <copy preservelastmodified="true"
+          todir="${sdk.output.path}/src"
+          verbose="true">
+      <fileset dir="${flex.source}"/>
+    </copy>
+
+    <!--
+    <copy preservelastmodified="true"
+          todir="${sdk.output.path}/lib"
+          verbose="true">
+      <fileset dir="${flex.lib}"/>
+    </copy>
+    -->
+    <antcall target="ide-substitution-vars"/>
+  </target>
+
+<!-- creates the ide template substitution python file -->
+  <target name="ide-substitution-vars">
+    <concat destfile="${output.path}/ide-substitution-values.py">
+{ '@@{{main.file}}@@': '${flex.main.file}',
+  '@@{{project.name}}@@': '${ant.project.name}' }
+    </concat>
+  </target>
+</project>
