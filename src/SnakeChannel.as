@@ -23,6 +23,7 @@ package {
     import com.litl.helpers.view.ViewBase;
     import com.litl.sdk.enum.View;
     import com.litl.sdk.message.InitializeMessage;
+    import com.litl.snake.model.GameModel;
 
     public class SnakeChannel extends BaseChannel {
         public static const CHANNEL_ID:String = "snake-channel";
@@ -30,8 +31,15 @@ package {
         public static const CHANNEL_VERSION:String = "1.0";
         public static const CHANNEL_HAS_OPTIONS:Boolean = false;
 
+        protected var model:GameModel;
+
         public function SnakeChannel() {
             super();
+        }
+
+        /** @inheritDoc */
+        override protected function setup():void {
+            model = new GameModel(service);
         }
 
         /** @inheritDoc */
