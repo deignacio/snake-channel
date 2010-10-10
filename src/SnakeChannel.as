@@ -27,6 +27,7 @@ package {
     import com.litl.snake.controls.GameLoop;
     import com.litl.snake.enum.GameSpeed;
     import com.litl.snake.model.GameModel;
+    import com.litl.snake.view.GameViewManager;
 
     public class SnakeChannel extends BaseChannel {
         public static const CHANNEL_ID:String = "snake-channel";
@@ -36,6 +37,7 @@ package {
 
         protected var gameLoop:GameLoop;
         protected var model:GameModel;
+        protected var viewManager:GameViewManager;
 
         public function SnakeChannel() {
             super();
@@ -47,6 +49,9 @@ package {
 
             model = new GameModel(service);
             gameLoop.addMember(model);
+
+            viewManager = new GameViewManager(model);
+            gameLoop.addMember(viewManager);
         }
 
         /** @inheritDoc */
@@ -82,6 +87,11 @@ package {
             } else {
                 gameLoop.resume();
             }
+        }
+
+        /** @inheritDoc */
+        override protected function onViewChanged(newView:String, newDetails:String, viewWidth:Number=0, viewHeight:Number=0):void {
+            viewManager.view = currentView;
         }
     }
 }

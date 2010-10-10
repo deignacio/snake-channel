@@ -19,19 +19,16 @@
 * IN THE SOFTWARE.
 */
 package com.litl.snake.enum {
-    public class GameLoopStage {
-        public static const MOVE:String = "move";
+    /** when drawing players, map these colors to player ids */
+    public class PlayerColors {
+        private static const COLORS:Array = [
+            0xff0000, 0x0000ff, 0x00ff00,
+            0xffffff, 0x9AD7DB, 0x76d5db,
+            0x56d3db, 0x2cd0db, 0x00cedb ];
 
-        /** put your viz/drawing code in this stage */
-        public static const DRAW:String = "draw";
-
-        /** clean up any state or reset stuff here */
-        public static const CLEANUP:String = "cleanup";
-
-        public static const ALL_STAGES:Array = [
-            MOVE,
-            DRAW,
-            CLEANUP
-        ];
+        /** return a player id's color */
+        public static function getColor(playerId:int):uint {
+            return COLORS[playerId % COLORS.length];
+        }
     }
 }

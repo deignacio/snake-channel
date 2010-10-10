@@ -18,20 +18,21 @@
 * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-package com.litl.snake.enum {
-    public class GameLoopStage {
-        public static const MOVE:String = "move";
+package com.litl.snake.view {
+    import com.litl.helpers.view.ViewBase;
 
-        /** put your viz/drawing code in this stage */
-        public static const DRAW:String = "draw";
+    /** describes the interface for views that will be drawn by the game view manager */
+    public interface IGameView {
+        /** updates the game view to target this view base */
+        function set view(value:ViewBase):void;
 
-        /** clean up any state or reset stuff here */
-        public static const CLEANUP:String = "cleanup";
+        /** clears/resets the display */
+        function clear():void;
 
-        public static const ALL_STAGES:Array = [
-            MOVE,
-            DRAW,
-            CLEANUP
-        ];
+        /** draws an incremental move */
+        function drawMove():void;
+
+        /** draws the whole view */
+        function refresh():void;
     }
 }

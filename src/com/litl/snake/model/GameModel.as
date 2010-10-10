@@ -55,7 +55,7 @@ package com.litl.snake.model {
         }
 
         public function get stages():Array {
-            return [GameLoopStage.MOVE];
+            return [GameLoopStage.MOVE, GameLoopStage.CLEANUP];
         }
 
         /** clears crashes and resets the arena */
@@ -105,6 +105,9 @@ package com.litl.snake.model {
                 case GameLoopStage.MOVE:
                     onMove();
                     break;
+                case GameLoopStage.CLEANUP:
+                    onCleanup();
+                    break;
                 default:
                     break;
             }
@@ -116,6 +119,10 @@ package com.litl.snake.model {
             }
 
             forEachPlayer(onePlayer);
+        }
+
+        /** if there were crashes, reset the game */
+        protected function onCleanup():void {
             if (crashes.length) {
                 resetGame();
             }
