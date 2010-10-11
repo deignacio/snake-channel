@@ -28,6 +28,7 @@ package {
     import com.litl.snake.enum.GameSpeed;
     import com.litl.snake.model.GameModel;
     import com.litl.snake.view.GameViewManager;
+    import com.litl.snake.view.PauseOverlay;
 
     public class SnakeChannel extends BaseChannel {
         public static const CHANNEL_ID:String = "snake-channel";
@@ -38,6 +39,7 @@ package {
         protected var gameLoop:GameLoop;
         protected var model:GameModel;
         protected var viewManager:GameViewManager;
+        protected var pauseOverlay:PauseOverlay;
 
         public function SnakeChannel() {
             super();
@@ -52,6 +54,9 @@ package {
 
             viewManager = new GameViewManager(model);
             gameLoop.addMember(viewManager);
+
+            pauseOverlay = new PauseOverlay();
+            gameLoop.pauseOverlay = pauseOverlay;
         }
 
         /** @inheritDoc */
@@ -96,7 +101,10 @@ package {
 
         /** @inheritDoc */
         override protected function onViewChanged(newView:String, newDetails:String, viewWidth:Number=0, viewHeight:Number=0):void {
+            pauseOverlay.view = currentView;
             viewManager.view = currentView;
+
+            gameLoop.pause();
         }
     }
 }

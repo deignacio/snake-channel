@@ -22,6 +22,7 @@ package com.litl.snake.controls {
     import com.litl.snake.enum.GameLoopStage;
     import com.litl.snake.enum.GameSpeed;
     import com.litl.snake.event.SkipStageEvent;
+    import com.litl.snake.view.PauseOverlay;
 
     import flash.events.TimerEvent;
     import flash.utils.Dictionary;
@@ -53,6 +54,7 @@ package com.litl.snake.controls {
         private var members:Dictionary;
         private var currentStage:String;
         private var skipStages:Array;
+        private var _pauseOverlay:PauseOverlay = null;
 
         public function GameLoop(speed:GameSpeed) {
             members = new Dictionary();
@@ -78,21 +80,61 @@ package com.litl.snake.controls {
             }
         }
 
+        /**
+         * a view to display when the game loop is paused
+         *
+         * @see com.litl.snake.view.PauseOverlay PauseOverlay
+         */
+        public function get pauseOverlay():PauseOverlay {
+            return _pauseOverlay;
+        }
+
+        /**
+         * sets the game loops pause overlay
+         *
+         * @see com.litl.snake.view.PauseOverlay PauseOverlay
+         */
+        public function set pauseOverlay(value:PauseOverlay):void {
+            if (_pauseOverlay != value) {
+                if (_pauseOverlay != null) {
+                    _pauseOverlay.removeEventListener(TimerEvent.TIMER_COMPLETE, onUnpause);
+                }
+
+                _pauseOverlay = value;
+                if (_pauseOverlay != null) {
+                    _pauseOverlay.addEventListener(TimerEvent.TIMER_COMPLETE, onUnpause, false, 0, true);
+                }
+            }
+        }
+
         /** if the game loop is currently running */
         public function get running():Boolean {
             return timer.running;
         }
 
+        /** pause the game loop, shows the pause overlay */
         public function pause():void {
             if (timer.running) {
                 timer.stop();
             }
+
+            if (pauseOverlay != null) {
+                pauseOverlay.pause();
+            }
         }
 
+        /** begin the pause overlay unpause countdown */
         public function resume():void {
-            if (!timer.running) {
+            if (pauseOverlay != null) {
+                pauseOverlay.unpause();
+            } else if (!timer.running) {
                 timer.start();
             }
+        }
+
+        /** restart the game loop when unpause is complete */
+        protected function onUnpause(e:TimerEvent):void {
+            timer.start();
         }
 
         /**
