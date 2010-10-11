@@ -18,33 +18,29 @@
 * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-package com.litl.snake.view {
-    import com.litl.helpers.view.ViewBase;
-    import com.litl.snake.event.CrashSceneEvent;
+package com.litl.snake.event {
+    import flash.events.Event;
 
-    import flash.events.IEventDispatcher;
+    /**
+     * dispatched when a crash scene begins and ends
+     * this is used to let IGameView objects let the
+     * game view manager to start skipping move/draw/cleanup
+     * stages to let the tween/animations complete
+     *
+     * @see com.litl.snake.view.GameViewManager GameViewManager
+     * @see com.litl.snake.controls.GameLoop
+     */
+    public class CrashSceneEvent extends Event {
+        public static const BEGIN:String = "begin";
+        public static const END:String = "end";
 
-    /** dispatch this event when you start drawing a crash scene */
-    [Event(name=CrashSceneEvent.BEGIN, type="com.litl.snake.event.CrashSceneEvent")]
+        public function CrashSceneEvent(type:String) {
+            super(type);
+        }
 
-    /** dispatch this event when your crash scene animation/tweens are done */
-    [Event(name=CrashSceneEvent.END, type="com.litl.snake.event.CrashSceneEvent")]
-
-    /** describes the interface for views that will be drawn by the game view manager */
-    public interface IGameView extends IEventDispatcher {
-        /** updates the game view to target this view base */
-        function set view(value:ViewBase):void;
-
-        /** clears/resets the display */
-        function clear():void;
-
-        /** draws an incremental move */
-        function drawMove():void;
-
-        /** draws the whole view */
-        function refresh():void;
-
-        /** begin any crash animations for this view */
-        function drawCrash():void;
+        /** @inheritDoc */
+        override public function clone():Event {
+            return new CrashSceneEvent(type);
+        }
     }
 }
