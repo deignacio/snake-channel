@@ -28,6 +28,7 @@ package {
     import com.litl.snake.enum.GameSpeed;
     import com.litl.snake.model.GameModel;
     import com.litl.snake.view.GameViewManager;
+    import com.litl.snake.view.OptionsView;
     import com.litl.snake.view.PauseOverlay;
 
     public class SnakeChannel extends BaseChannel {
@@ -69,6 +70,9 @@ package {
 
             var channelView:ViewBase = new ViewBase();
             views[View.CHANNEL] = channelView;
+
+            var optionsView:OptionsView = new OptionsView(gameLoop, model);
+            pauseOverlay.addChildForViews(optionsView, [focusView]);
         }
 
         /** @inheritDoc */
