@@ -18,28 +18,35 @@
 * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 * IN THE SOFTWARE.
 */
-package com.litl.snake.enum {
+package com.litl.snake.event {
+    import flash.events.Event;
+
     /**
-     * specifies the different stages of a game loop turn.
+     * Dispatch this event when a IGameLoopMember wants to control
+     * the skipping of game loop stages in the game loop.
      *
-     * @see com.litl.snake.controls.GameLoop GameLoop
-     * @see com.litl.snake.event.SkipStageEvent SkipStageEvent
+     * @see com.litl.snake.controls.GameLoop
+     * @see com.litl.snake.controls.IGameLoopMember
      */
-    public class GameLoopStage {
-        /** any logic that involves moving players around */
-        public static const MOVE:String = "move";
+    public class SkipStageEvent extends Event {
+        /** this event wants to start skipping stages */
+        public static const SKIP_STAGE:String = "skip-stage";
 
-        /** put your viz/drawing code in this stage */
-        public static const DRAW:String = "draw";
+        /** this event wants to stop skipping some stages */
+        public static const UNSKIP_STAGE:String = "unskip-stage";
 
-        /** clean up any state or reset stuff here */
-        public static const CLEANUP:String = "cleanup";
+        /** the stage to be skipped/unskipped */
+        public var stage:String;
 
-        /** all of the stages, in order of execution */
-        public static const ALL_STAGES:Array = [
-            MOVE,
-            DRAW,
-            CLEANUP
-        ];
+        public function SkipStageEvent(type:String, stage:String) {
+            super(type);
+
+            this.stage = stage;
+        }
+
+        /** @inheritDoc */
+        override public function clone():Event {
+            return new SkipStageEvent(type, stage);
+        }
     }
 }

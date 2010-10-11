@@ -22,9 +22,33 @@ package com.litl.snake.view {
     import com.litl.helpers.view.ViewBase;
     import com.litl.snake.controls.IGameLoopMember;
     import com.litl.snake.enum.GameLoopStage;
+    import com.litl.snake.event.SkipStageEvent;
     import com.litl.snake.model.GameModel;
 
-    public class GameViewManager implements IGameLoopMember {
+    import flash.events.EventDispatcher;
+
+    /**
+     * emit this event if you want the game loop to skip a certain stage
+     * for a while.  think about if you have a long crash tween or
+     * start up sequence
+     *
+     * use this for game state transitions that are not triggered explicitly
+     * by a user request to pause the game loop.  that way you don't get
+     * stuck managing a game that randomly or unexpectedly pauses or starts.
+     */
+    [Event(type=SkipStageEvent.SKIP_STAGE, name="com.litl.snake.event.SkipStageEvent")]
+
+    /**
+     * when you're done doing whatever you needed to do while skipping that
+     * stage, undo it w/unskip stage
+     *
+     * use this for game state transitions that are not triggered explicitly
+     * by a user request to pause the game loop.  that way you don't get
+     * stuck managing a game that randomly or unexpectedly pauses or starts.
+     */
+    [Event(type=SkipStageEvent.UNSKIP_STAGE, name="com.litl.snake.event.SkipStageEvent")]
+
+    public class GameViewManager extends EventDispatcher implements IGameLoopMember {
         protected var model:GameModel;
         protected var gameViews:Array;
         protected var _view:ViewBase;

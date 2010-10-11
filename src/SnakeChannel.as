@@ -81,6 +81,11 @@ package {
             service.channelItemCount = 1;
         }
 
+        /**
+         * toggles pause/unpause of the gameloop
+         *
+         * @inheritDoc
+         */
         override protected function handleGoReleased(e:UserInputMessage):void {
             if (gameLoop.running) {
                 gameLoop.pause();

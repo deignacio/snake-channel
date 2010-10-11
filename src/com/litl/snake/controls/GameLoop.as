@@ -21,6 +21,7 @@
 package com.litl.snake.controls {
     import com.litl.snake.enum.GameLoopStage;
     import com.litl.snake.enum.GameSpeed;
+    import com.litl.snake.event.SkipStageEvent;
 
     import flash.events.TimerEvent;
     import flash.utils.Dictionary;
@@ -35,16 +36,27 @@ package com.litl.snake.controls {
      * specified, and registered.  this in turn causes the member.onStage(stage)
      * to be executed.
      *
+     * there are times however, where you might want to skip various stages
+     * but not muck with starting and stopping the game loop.  for this reason
+     * game loop members can dispatch SkipStageEvents.  this gives developers
+     * the ability to isolate the game loop being paused/and unpaused only as
+     * a result of a user interaction, and use SkipStageEvents to control times
+     * when the game is actually doing some one-off/every once in a while
+     * transition type of action.
+     *
      * @see com.litl.snake.enum.GameLoopStage GameLoopStage
+     * @see com.litl.snake.event.SkipStageEvent SkipStageEvent
      */
     public class GameLoop {
         private var _speed:GameSpeed;
         private var timer:Timer;
         private var members:Dictionary;
         private var currentStage:String;
+        private var skipStages:Array;
 
         public function GameLoop(speed:GameSpeed) {
             members = new Dictionary();
+            skipStages = new Array();
 
             timer = new Timer(0, 0);
             timer.addEventListener(TimerEvent.TIMER, onTimer, false, 0, true);
@@ -104,12 +116,19 @@ package com.litl.snake.controls {
                     tier.push(member);
                 }
             }
+
+            member.addEventListener(SkipStageEvent.SKIP_STAGE, onSkipStage, false, 0, true);
+            member.addEventListener(SkipStageEvent.UNSKIP_STAGE, onUnskipStage, false, 0, true);
         }
 
         /** run through the game loop members */
         protected function onTimer(e:TimerEvent):void {
             for (var i:int = 0; i < GameLoopStage.ALL_STAGES.length; i++) {
                 currentStage = GameLoopStage.ALL_STAGES[i];
+                if (skipStages.indexOf(currentStage) != -1) {
+                    continue;
+                }
+
                 var tier:Array = members[currentStage];
                 if (tier != null) {
                     tier.forEach(onStage);
@@ -120,6 +139,31 @@ package com.litl.snake.controls {
         /** execute a member's logic for the current stage */
         protected function onStage(member:IGameLoopMember, index:int, arr:Array):void {
             member.onStage(currentStage);
+        }
+
+        /**
+         * process the skip stage event
+         *
+         * NOTE:  skip/unskip stage events are not refcounted.  this means
+         *     that 5 skips, and then 1 unskip results in an unskipped stage
+         */
+        protected function onSkipStage(e:SkipStageEvent):void {
+            if (skipStages.indexOf(e.stage) == -1) {
+                skipStages.push(e.stage);
+            }
+        }
+
+        /**
+         * process the unskip stage event
+         *
+         * NOTE:  skip/unskip stage events are not refcounted.  this means
+         *     that 5 skips, and then 1 unskip results in an unskipped stage
+         */
+        protected function onUnskipStage(e:SkipStageEvent):void {
+            var index:int = skipStages.indexOf(e.stage);
+            if (index != -1) {
+                skipStages.splice(index, 1);
+            }
         }
     }
 }

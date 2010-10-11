@@ -54,6 +54,11 @@ package com.litl.snake.model {
             start();
         }
 
+        /**
+         * the game model participates in MOVE and CLEANUP stages
+         *
+         * @inheritDoc
+         */
         public function get stages():Array {
             return [GameLoopStage.MOVE, GameLoopStage.CLEANUP];
         }
@@ -100,6 +105,7 @@ package com.litl.snake.model {
             forEachHandler(outer);
         }
 
+        /** @inheritDoc */
         public function onStage(stage:String):void {
             switch (stage) {
                 case GameLoopStage.MOVE:
@@ -113,6 +119,7 @@ package com.litl.snake.model {
             }
         }
 
+        /** skips if there are crashes, moves each player */
         protected function onMove():void {
             if (crashes.length) {
                 return;
