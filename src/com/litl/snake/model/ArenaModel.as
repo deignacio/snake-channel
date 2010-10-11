@@ -125,7 +125,15 @@ package com.litl.snake.model {
                     break;
             }
 
-            if ((!wrap.shouldWrap && hitWall) || isOccupied(spot)) {
+            if (!wrap.shouldWrap && hitWall) {
+                player.crashCount++;
+                return true;
+            } else if (isOccupied(spot)) {
+                player.crashCount++;
+                var causer:Player = spots[String(spot)] as Player;
+                if (causer.id != player.id) {
+                    causer.causedCount++;
+                }
                 return true;
             } else {
                 moveToSpot(player, spot);

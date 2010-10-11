@@ -40,6 +40,12 @@ package com.litl.snake.model {
         /** the player's position */
         public var position:PlayerPosition = new PlayerPosition();
 
+        /** the number of times the player has crashed */
+        public var crashCount:int = 0;
+
+        /** the number of times another player has crashed into their trail */
+        public var causedCount:int = 0;
+
         public function Player(id:int) {
             super();
 
