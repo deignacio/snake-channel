@@ -68,11 +68,9 @@
         <include name="bin"/>
       </compiler.library-path>
 
-      <!--
       <compiler.library-path dir="${flex.lib}" append="true">
         <include name="*.swc"/>
       </compiler.library-path>
-      -->
     </mxmlc>
   </target>
 
@@ -100,14 +98,11 @@
           verbose="true">
       <fileset dir="${flex.source}"/>
     </copy>
-
-    <!--
     <copy preservelastmodified="true"
           todir="${sdk.output.path}/lib"
           verbose="true">
       <fileset dir="${flex.lib}"/>
     </copy>
-    -->
     <antcall target="ide-substitution-vars"/>
   </target>
 
