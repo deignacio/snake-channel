@@ -103,6 +103,11 @@
           verbose="true">
       <fileset dir="${flex.lib}"/>
     </copy>
+    <copy preservelastmodified="true"
+          todir="${sdk.output.path}/assets"
+          verbose="true">
+      <fileset dir="${flex.assets}" />
+    </copy>
     <antcall target="ide-substitution-vars"/>
   </target>
 
