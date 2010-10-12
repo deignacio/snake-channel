@@ -26,8 +26,19 @@ package com.litl.snake.model {
     import com.litl.snake.enum.ArenaSize;
     import com.litl.snake.enum.ArenaWrap;
 
+    /**
+     * contains all of the state of the game
+     * <li>extends remote handler manger, so we have all of the players
+     * <li>each remote corresponds to a Player object
+     * <li>the game arena
+     *
+     * @see com.litl.helpers.richinput.remotehandler.RemoteHandlerManager
+     * @see com.litl.snake.model.ArenaModel
+     * @see com.litl.snake.model.Player
+     */
     public class GameModel extends RemoteHandlerManager {
-        private var crashes:Array;
+        /** an array of players that crashed this turn */
+        public var crashes:Array;
 
         /** the arena */
         public var arena:ArenaModel;
@@ -41,6 +52,7 @@ package com.litl.snake.model {
             start();
         }
 
+        /** clears crashes and resets the arena */
         protected function resetGame():void {
             crashes = new Array();
 
@@ -68,6 +80,13 @@ package com.litl.snake.model {
             arena.leaveArena(player);
         }
 
+        /**
+         * convenience method similar to Array.forEach, takes a callback
+         * function and applies it to each connected player object
+         *
+         * the callback should have signature:
+         * function(player:Player):void
+         */
         public function forEachPlayer(func:Function):void {
             var outer:Function = function(handler:IRemoteHandler):void {
                 func(handler as Player);
@@ -82,11 +101,18 @@ package com.litl.snake.model {
 
             forEachPlayer(onePlayer);
             if (crashes.length) {
-                // do some crash stuff
                 resetGame();
             }
         }
 
+        /**
+         * on player's move
+         * <li>checks the keypad to see if we should turn
+         * <li>advances the player in the arena
+         * <li>if crashed, adds to the crash list
+         *
+         * @see com.litl.snake.controls.PlayerDirectionKeypad PlayerDirectionKeypad
+         */
         private function onePlayer(player:Player):void {
             player.checkKeypad();
             if (arena.advancePlayer(player)) {

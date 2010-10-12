@@ -28,12 +28,19 @@ package com.litl.snake.model {
     /**
      * the arena has several responsibilities:
      * <li>tracking the size of the arena
+     * <li>tracking all claimed/unclaimed spots in the game
+     * <li>know when/how to wrap across walls
+     * <li>advance players around in the arena
+     * <li>detect crashes
      *
      * @see com.litl.snake.model.PlayerPosition
      */
     public class ArenaModel {
         private var _size:ArenaSize = null;
-        private var wrap:ArenaWrap;
+
+        /** the arena wrap of the arena */
+        public var wrap:ArenaWrap;
+
         private var spots:Dictionary;
 
         public function ArenaModel(size:ArenaSize, wrap:ArenaWrap) {

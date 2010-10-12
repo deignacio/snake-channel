@@ -72,12 +72,18 @@ package com.litl.snake.model {
             }
         }
 
+        /**
+         * use a PlayerDirectionKeypad, automatically start it
+         *
+         * @inheritDoc
+         */
         override protected function createKeypad(accelerometer:Accelerometer):AccelerometerKeypad {
             var keypad:AccelerometerKeypad = new PlayerDirectionKeypad(accelerometer);
             keypad.start();
             return keypad;
         }
 
+        /** checks the player's keypad, changes direction if appropriate */
         public function checkKeypad():void {
             switch (direction) {
                 case PlayerDirection.NORTH:
