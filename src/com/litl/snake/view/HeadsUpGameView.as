@@ -189,6 +189,7 @@ package com.litl.snake.view {
          * currently just grows it to 20x size and fades to transparent
          */
         protected function explodePlayerShape(s:PlayerShape):void {
+            s.tweening = true;
             var tween:Tween = Tween.tweenTo(s,
                 2,
                 { "radius":20*playerRadius,
@@ -199,6 +200,7 @@ package com.litl.snake.view {
 
         /** throws the player shape off the screen. */
         protected function throwPlayerShapeOffscreen(s:PlayerShape):void {
+            s.tweening = true;
             var crashParams:Object = calculateThrowDestination(s, explodeCenter);
             crashParams["alpha"] = 0.0;
             var tween:Tween = Tween.tweenTo(s,
@@ -213,6 +215,9 @@ package com.litl.snake.view {
          */
         protected function onCrashComplete(e:Event):void {
             var tween:Tween = e.currentTarget as Tween;
+            var s:PlayerShape = tween.subject as PlayerShape;
+            s.tweening = false;
+
             var index:int = crashTweens.indexOf(tween);
             if (index != -1) {
                 crashTweens.splice(index, 1);

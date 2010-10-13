@@ -34,8 +34,10 @@ package com.litl.snake.view {
         /** the player's color */
         public var color:uint;
 
-        /** the size of the player's sprite */
-        public var radius:Number;
+        private var _radius:Number;
+
+        /** if we are tweening.  causes x/y/radius changes to trigger a redraw */
+        public var tweening:Boolean = false;
 
         public function PlayerShape(id:int,
                                     color:uint = 0,
@@ -46,7 +48,7 @@ package com.litl.snake.view {
             this.color = color;
             _x = x;
             _y = y;
-            this.radius = radius;
+            _radius = radius;
 
             redraw();
         }
@@ -62,6 +64,9 @@ package com.litl.snake.view {
 
         override public function set x(value:Number):void {
             _x = value;
+            if (tweening) {
+                redraw();
+            }
         }
 
         override public function get y():Number {
@@ -70,6 +75,21 @@ package com.litl.snake.view {
 
         override public function set y(value:Number):void {
             _y = value;
+            if (tweening) {
+                redraw();
+            }
+        }
+
+        public function get radius():Number {
+            return _radius;
+        }
+
+        /** the size of the player's sprite */
+        public function set radius(value:Number):void {
+            _radius = value;
+            if (tweening) {
+                redraw();
+            }
         }
 
         /** updates the shape to new color, size, position */
