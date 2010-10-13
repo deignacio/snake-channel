@@ -1,0 +1,87 @@
+so you want to be a litl game channel developer?
+by david ignacio <dignacio@litl.com>
+
+for the past while, i've been brainstorming how to make the transition from flash developer or flash
+game developer to litl game channel developer.  it ended up being a lot of exploring code, writing
+and iterating on some ideas and talking to some people that have done it before in other settings.
+hopefully my trials can save you a lot of extra work and wasted time, and make the games that you
+end up writing that much cooler.
+
+if at any time you think that i'm totally off my rocker or saying something totally wrong, or you
+think you have a better way of showing something, let me know.  that way we can make this document
+better for everyone, and i'll probably make a whole new library just for you.  i had a 30min call
+with jesse freeman (@codebum) and it turned into me rewriting my almost finished tutorial example,
+creating a whole new sdk helper swc (which is totally awesome by the way) and then spent the rest of
+the weekend (now week, it's tuesday night) polishing this document.  chances are you have really
+good ideas and i want to know them all.
+
+ if you are reading this, you also have a copy of the android remote app, the litl channel simulator
+ and the as3 sdk swcs.  this repository is the third generation channel of me figuring out how to
+make it all work.  it started out as a ball that moved around as you tilted your remote, then it
+got more interesting as i wrote the pong channel to get a better feel for handling multiple players
+and game responsiveness, and now we have the snakes channel.  i think there are a lot of useful
+ patterns and lessons in this channel, as well as a lot of (hopefully) good reusable code that you
+ can use in your channels.
+
+ before starting to write any code, answer the following questions:
+ * one player or multiple players?
+     are there teams?  scores?
+ * what type of input or controls does each player use?
+     do players steer or lean?  is this more of a keypad game (one keypress -> discrete movement)?
+ * what different types of game states do you want to have?
+     logo, options/game setup, playing, high scores, current scoreboard, invite/pairing?
+     think about the different views (card/focus/channel) and how you might want to map these items
+ * think about breaking your game into a series of turns or game loop slices, it will probably help
+
+now that you have those answers, here's what i've got:
+
+take a look at the as3-sdk-helpers swc.  there are currently two things to highlight:  the remote
+handler manager, and the accelerometer keypad.
+
+remote handler manager ->  think of this as all of the code that you'd need to write to keep track
+of your players and their remotes.  it takes a factory class and keeps track of any remote controls
+that connect to the channel/simulator (there's probably a whole doc on that workflow) and create
+remote handler/player objects.
+
+accelerometer keypad -> this allows you have a game that might have originally (or still is)
+powered by a keyboard.  it allows you to specify a set of virtual buttons, that are made up of a
+set of regions in xyz space, and let you check to see if they are "being pressed" by the current
+values of the accelerometer.  this way you don't need to have an ugly switch statement and a bunch
+of event listener code cluttering up your code.  think of it as a game w/buttons and actions.
+
+we also have the snake channel, which is an actual implementation using these helper libraries, as
+well as a bunch of other patterns that i haven't formalized into helpers yet.  they are the game
+loop class and the pause overlay.
+
+here's what's up:
+the game loop class was super crucial because at first i tried to just have my model w/a timer, or
+even just a timer in the channel class.  it got super messy while trying to do things like longer
+animations that took longer than one turn cycle to complete, or if the user had pressed the go
+button to pause the game but other things wanted to trigger the loop to keep going.  that was super
+messy.  so i gravitated to a single loop, and had things register to be run as a part of the
+loop instead of different logic and actions being chained together as a response to different events
+being dispatched.  it also made the code to deal with one-offs and special cases more sane.
+
+the pause overlay goes hand in hand with the game loop, since it is busy while the game loop is
+paused.  at any given time, you are either seeing the game loop running around, or views registered
+in the pause overlay.  once again, the different state diagrams got really messy if i wanted to
+a) not show anything in card view, always have the game paused and a card logo
+b) have an options view to change around game parameters, but only show that in focus view
+c) have the main game take place in channel view, but have a paused state toggled on go button
+presses that showed the scoreboard
+d) show the scoreboard in focus view also since there was a bunch of extra space
+the pause overlay lets you register a view to be added to the pause overlay when the channel is in
+a particular mode.  this made the above view management super simple:  create the object, say which
+views it should be displayed in, boom.
+
+so if you are going to read along in the code, the channel as a whole can be a lot to take in at
+once, the comments will only tell you so much.  i really recommend looking at the code in terms of
+the git repo.  i spent a bunch of time really trying to make sure that the progression of commits
+made sense and that each one had a good amount of value.  i think that reading this document and
+then like paging around in gitk or just on github (http://bit.ly/cSSU8z) will help a bunch.
+
+so i think that's all i've got for now.  thanks for reading and please let me know where i can
+improve things, even if it's just "stop ranting and being so verbose..  get to the point already."
+
+i look forward to seeing what kind of games everyone makes-
+dave
