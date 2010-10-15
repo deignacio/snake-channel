@@ -218,6 +218,10 @@ package com.litl.snake.view {
             var s:PlayerShape = tween.subject as PlayerShape;
             s.tweening = false;
 
+            if (s.parent != null) {
+                s.parent.removeChild(s);
+            }
+
             var index:int = crashTweens.indexOf(tween);
             if (index != -1) {
                 crashTweens.splice(index, 1);
