@@ -178,10 +178,10 @@ package com.litl.snake.view {
             var shape:PlayerShape = playerShapes[player.id];
             if (model.crashes.indexOf(player) != -1) {
                 explodePlayerShape(shape);
-                delete playerShapes[player.id];
             } else {
                 throwPlayerShapeOffscreen(shape);
             }
+            delete playerShapes[player.id];
         }
 
         /**
