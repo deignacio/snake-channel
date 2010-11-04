@@ -31,6 +31,7 @@ package {
     import com.litl.snake.view.GameViewManager;
     import com.litl.snake.view.OptionsView;
     import com.litl.snake.view.PauseOverlay;
+    import com.litl.snake.view.RemoteStats;
     import com.litl.snake.view.Scoreboard;
 
     public class SnakeChannel extends BaseChannel {
@@ -43,6 +44,7 @@ package {
         protected var model:GameModel;
         protected var viewManager:GameViewManager;
         protected var pauseOverlay:PauseOverlay;
+        protected var remoteStats:RemoteStats;
 
         public function SnakeChannel() {
             super();
@@ -80,6 +82,9 @@ package {
 
             var scoreboard:Scoreboard = new Scoreboard(model);
             pauseOverlay.addChildForViews(scoreboard, [focusView, channelView]);
+
+            remoteStats = new RemoteStats(service);
+            pauseOverlay.addChildForViews(remoteStats, [focusView, channelView]);
         }
 
         /** @inheritDoc */
@@ -116,6 +121,14 @@ package {
 
             if (newView != View.CARD) {
                 viewManager.view = currentView;
+            }
+
+            if (newView == View.FOCUS) {
+                remoteStats.showDot = true;
+            }
+
+            if (newView == View.CHANNEL) {
+                remoteStats.showDot = false;
             }
 
             gameLoop.pause();
