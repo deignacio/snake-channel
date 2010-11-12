@@ -22,9 +22,13 @@ package com.litl.snake.enum {
     /** when drawing players, map these colors to player ids */
     public class PlayerColors {
         private static const COLORS:Array = [
-            0xff0000, 0x0000ff, 0x00ff00,
-            0xffffff, 0x9AD7DB, 0x76d5db,
-            0x56d3db, 0x2cd0db, 0x00cedb ];
+            0xe50000, 0x0343df, 0x15b01a,
+            0xffffff, 0x9AD7DB, 0xae7181,
+            0xceb301, 0xf97306, 0xcae2fd,
+            0xff028d, 0x029386, 0x650021,
+            0x06c2ac, 0x7e1e9c, 0x89fe05,
+            0xd1b26f, 0x06470c, 0xff028d
+        ];
 
         /** return a player id's color */
         public static function getColor(playerId:int):uint {
