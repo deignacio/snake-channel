@@ -1,4 +1,5 @@
 <project basedir="./" default="build-debug-swf" name="SnakeChannel">
+  <property file="${basedir}/project.properties"/>
   <property name="build.properties.path" value="${basedir}/build.properties"/>
   <property file="${build.properties.path}"/>
 
