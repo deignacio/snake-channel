@@ -1,7 +1,7 @@
 <project basedir="./" default="build-debug-swf" name="SnakeChannel">
-  <property file="${basedir}/project.properties"/>
   <property name="build.properties.path" value="${basedir}/build.properties"/>
   <property file="${build.properties.path}"/>
+  <property file="${basedir}/project.properties"/>
 
   <taskdef resource="flexTasks.tasks" classpath="${flex.sdk.home}/ant/lib/flexTasks.jar" />
 
