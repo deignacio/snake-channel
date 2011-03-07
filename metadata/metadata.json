@@ -1,0 +1,23 @@
+{
+    "metadata": {
+        "name": "Snakes! (git)",
+        "channel_listing_id": "snake-channel-git",
+        "url": "http://www.litl.com",
+        "source_url": "http://www.litl.com",
+        "summary": "TODO",
+        "description": "a multi player game channel, uses accelerometers to turn and such, go button pause/unpauses, options in focus view, play in channel view",
+        "price": "0",
+        "category": "Games",
+        "keywords": "",
+        "third_party_code": ""
+    },
+
+    "thumbnail_paths": {
+        "grid": "grid.png",
+        "card": "card.png",
+        "page": "page.png",
+        "channel": "channel.png"
+    },
+
+    "compatible_devices" : "webbook"
+}
