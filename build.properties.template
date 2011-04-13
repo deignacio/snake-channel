@@ -2,6 +2,12 @@
 temp.dir = /tmp
 locale = en_US
 
+channel.id = snake-channel
+channel.name = Snakes!
+channel.id.git = ${channel.id}_git
+channel.name.git = ${channel.name} (git)
+channel.constants = src/LitlChannelMetadata.as
+
 flex.sdk.home = /opt/flex-sdk_4.1.0
 litl.sdk.home = /opt/litl-sdk
 litl.sdk.core.path = ${litl.sdk.home}/core

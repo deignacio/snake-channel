@@ -9,6 +9,30 @@
     <delete dir="${output.path}"/>
   </target>
 
+  <macrodef name="update-channel-metadata">
+    <attribute name="channel-id"/>
+    <attribute name="channel-name"/>
+    <sequential>
+      <replaceregexp file="${channel.constants}"
+             match="(CHANNEL_ID\s*:\s*String = &quot;)(.+)(&quot;;)"
+             replace="\1@{channel-id}\3"/>
+      <replaceregexp file="${channel.constants}"
+             match="(CHANNEL_TITLE\s*:\s*String = &quot;)(.+)(&quot;;)"
+             replace="\1@{channel-name}\3"/>
+      <replaceregexp file="metadata/metadata.json"
+             match="(&quot;channel_listing_id&quot;: &quot;)(.+)(&quot;,)"
+             replace="\1@{channel-id}\3"/>
+      <replaceregexp file="metadata/metadata.json"
+             match="(&quot;name&quot;: &quot;)(.+)(&quot;,)"
+             replace="\1@{channel-name}\3"/>
+    </sequential>
+  </macrodef>
+
+  <target name="build-git-zip" description="Build git deploy zipfile and update with git metadata">
+    <update-channel-metadata channel-id="${channel.id.git}" channel-name="${channel.name.git}"/>
+    <antcall target="build-release-zip"/>
+  </target>
+
   <target name="build-release-zip" description="Build release deploy zipfile">
     <antcall target="clean"/>
     <antcall target="build-release-swf"/>
