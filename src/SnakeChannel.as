@@ -34,11 +34,6 @@ package {
     import com.litl.snake.view.Scoreboard;
 
     public class SnakeChannel extends BaseChannel {
-        public static const CHANNEL_ID:String = "snake-channel";
-        public static const CHANNEL_TITLE:String = "Snakes!";
-        public static const CHANNEL_VERSION:String = "1.0";
-        public static const CHANNEL_HAS_OPTIONS:Boolean = false;
-
         protected var gameLoop:GameLoop;
         protected var model:GameModel;
         protected var viewManager:GameViewManager;
@@ -84,7 +79,7 @@ package {
 
         /** @inheritDoc */
         override protected function connectToService():void {
-            service.connect(CHANNEL_ID, CHANNEL_TITLE, CHANNEL_VERSION, CHANNEL_HAS_OPTIONS);
+            service.connect(LitlChannelMetadata.CHANNEL_ID, LitlChannelMetadata.CHANNEL_TITLE, LitlChannelMetadata.CHANNEL_VERSION, LitlChannelMetadata.CHANNEL_HAS_OPTIONS);
         }
 
         /**
@@ -93,7 +88,7 @@ package {
          * @inheritDoc
          */
         override protected function handleInitialize(e:InitializeMessage):void {
-            service.channelTitle = CHANNEL_TITLE;
+            service.channelTitle = LitlChannelMetadata.CHANNEL_TITLE;
             service.channelItemCount = 1;
         }
 
